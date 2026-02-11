@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="keywords"
+      content="MDrive, MDriveBench, V2X, Cooperative Driving, Multi-Agent System, UCLA Mobility Lab, Foundation Models, IV2026"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+      MDrive - A Cooperative Driving Benchmark for End-to-End Closed-loop
+      Multi-Agent System
+    </title>
+
+    <link rel="icon" href="./static/images/favicon.svg" />
+    <link rel="stylesheet" href="./static/css/bulma.min.css" />
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css"
+    />
+    <link rel="stylesheet" href="./static/css/index.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+
+    <style>
+      :root {
+        --drivex-bg: #020817;
+        --drivex-bg-soft: #0b1224;
+        --drivex-primary: #2dd4bf;
+        --drivex-primary-soft: rgba(45, 212, 191, 0.12);
+        --drivex-accent: #38bdf8;
+        --drivex-text-main: #e5e7eb;
+        --drivex-text-soft: #9ca3af;
+        --drivex-radius-xl: 18px;
+        --drivex-radius-full: 999px;
+      }
+
+      html,
+      body {
+        scroll-behavior: smooth;
+        background-color: var(--drivex-bg);
+        color: var(--drivex-text-main);
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+
+      body {
+        padding-top: 4.5rem;
+      }
+
+      /* --- NAVIGATION (UNCHANGED) --- */
+      .navbar {
+        background-color: rgba(2, 8, 23, 0.9) !important;
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        min-height: 4.5rem;
+      }
+
+      .nav-link {
+        position: relative;
+        font-weight: 500;
+        color: var(--drivex-text-soft) !important;
+        transition: color 0.3s ease;
+        padding: 0.5rem 1rem;
+      }
+
+      .nav-link:hover {
+        color: var(--drivex-primary) !important;
+        background-color: transparent !important;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        display: block;
+        margin-top: 5px;
+        right: 0;
+        background: var(--drivex-primary);
+        transition: width 0.3s ease;
+        bottom: 8px;
+      }
+
+      .nav-link:hover::after {
+        width: 60%;
+        left: 20%;
+      }
+      .navbar-burger {
+        color: var(--drivex-text-main);
+        height: 4.5rem;
+      }
+
+      /* --- HERO SECTION (UNCHANGED) --- */
+      .hero.drivex-hero {
+        padding: 3rem 0;
+        align-items: flex-start;
+        text-align: left;
+        background: linear-gradient(rgba(2, 8, 23, 0.85), rgba(2, 8, 23, 0.95)),
+          url("https://upload.wikimedia.org/wikipedia/commons/a/a7/Detroit_Skyline_%28123143197%29.jpeg")
+            center/cover no-repeat;
+      }
+
+      .hero-kicker {
+        color: var(--drivex-primary);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 0.8rem;
+        margin-bottom: 0.4rem;
+      }
+
+      .hero-presents {
+        color: var(--drivex-text-soft);
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+      }
+
+      .hero-title {
+        color: #ffffff !important;
+        font-weight: 700;
+        line-height: 1.3;
+        margin-bottom: 1rem;
+        max-width: 1100px;
+      }
+
+      .hero-buttons {
+        margin-top: 1.5rem;
+        display: flex;
+        justify-content: flex-start;
+        gap: 1rem;
+      }
+
+      .hero-info-boxes {
+        margin-top: 2.5rem;
+        display: flex;
+        justify-content: flex-start;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .info-box {
+        background: rgba(45, 212, 191, 0.08);
+        border: 1px solid rgba(45, 212, 191, 0.3);
+        padding: 1.2rem 2rem;
+        border-radius: 14px;
+        min-width: 240px;
+      }
+
+      .info-box .box-label {
+        color: var(--drivex-primary);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        margin-bottom: 0.4rem;
+        display: block;
+        letter-spacing: 1.5px;
+        font-weight: 600;
+      }
+
+      .info-box .box-date {
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.4rem;
+      }
+
+      /* --- BUTTON ANIMATIONS --- */
+      .btn-submit {
+        background-color: var(--drivex-primary) !important;
+        color: #020817 !important;
+        font-weight: 600;
+        border: none;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+        height: 2.8rem !important;
+        font-size: 0.9rem !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+
+      .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(45, 212, 191, 0.3);
+        background-color: #38e2cf !important;
+      }
+
+      .btn-leaderboard {
+        background-color: transparent !important;
+        color: var(--drivex-primary) !important;
+        border: 2px solid var(--drivex-primary) !important;
+        font-weight: 600;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+        height: 2.8rem !important;
+        font-size: 0.9rem !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+
+      .btn-leaderboard:hover {
+        transform: translateY(-2px);
+        background-color: var(--drivex-primary) !important;
+        color: var(--drivex-bg) !important;
+        box-shadow: 0 8px 15px rgba(45, 212, 191, 0.2);
+      }
+
+      /* --- BODY CONTAINER & CONTENT SEPARATION --- */
+      .body-container {
+        max-width: 1100px;
+        margin: 40px auto;
+        background-color: var(--drivex-bg-soft);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        padding: 0; /* Remove global padding to allow dividers to hit the edge */
+        overflow: hidden;
+      }
+
+      .section {
+        padding: 3.5rem 2.5rem;
+        position: relative;
+      }
+
+      /* Divider line between sections within the box */
+      .section:not(:last-child) {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .content h2.title {
+        color: #f9fafb !important;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        border-left: 4px solid var(--drivex-primary);
+        padding-left: 1rem;
+      }
+
+      .content h3.subtitle {
+        color: var(--drivex-primary) !important;
+        font-weight: 600;
+        margin-top: 2.5rem !important;
+        margin-bottom: 1.5rem !important;
+        font-size: 1.5rem;
+      }
+
+      .research-question {
+        font-size: 1.3rem;
+        font-style: italic;
+        color: #fff;
+        border-left: 3px solid var(--drivex-primary);
+        padding: 1.2rem 0 1.2rem 2rem;
+        margin: 2.5rem 0;
+        line-height: 1.6;
+        background: linear-gradient(
+          to right,
+          rgba(45, 212, 191, 0.05),
+          transparent
+        );
+      }
+
+      .content p,
+      .content li {
+        color: var(--drivex-text-main);
+        line-height: 1.8;
+        margin-bottom: 1.2rem;
+        font-size: 1.05rem;
+      }
+
+      .content ul {
+        margin-left: 1.5rem;
+        list-style-type: disc;
+      }
+
+      .formula-box {
+        background: rgba(45, 212, 191, 0.05);
+        border: 1px solid rgba(45, 212, 191, 0.2);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+        font-family: "Courier New", Courier, monospace;
+        color: var(--drivex-primary);
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      /* --- HORIZONTAL GOALS STYLING --- */
+      .goals-container {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+      .goal-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        background: rgba(255, 255, 255, 0.03);
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: transform 0.2s ease;
+      }
+      .goal-item:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .goal-number {
+        background-color: var(--drivex-primary);
+        color: var(--drivex-bg);
+        font-weight: 800;
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+      }
+      .goal-content strong {
+        color: var(--drivex-primary);
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+      }
+
+      /* --- LEADERBOARD & TABLE VISIBILITY --- */
+      .leaderboard-table-container {
+        overflow-x: auto;
+        margin-top: 1.5rem;
+      }
+      .leaderboard-table {
+        width: 100%;
+        background-color: transparent;
+        color: var(--drivex-text-main);
+        border-collapse: separate;
+        border-spacing: 0 8px;
+      }
+      .leaderboard-table th {
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        padding: 1rem;
+        border: none !important;
+      }
+      .leaderboard-table td {
+        background-color: rgba(255, 255, 255, 0.03);
+        padding: 1rem;
+        vertical-align: middle;
+        border: none !important;
+        font-size: 0.95rem;
+        color: #ffffff !important;
+      }
+      .leaderboard-table tr td:first-child {
+        border-radius: 8px 0 0 8px;
+        font-weight: 800;
+        text-align: center;
+        width: 60px;
+      }
+      .leaderboard-table tr td:last-child {
+        border-radius: 0 8px 8px 0;
+      }
+      .rank-gold {
+        color: #ffd700 !important;
+      }
+      .rank-silver {
+        color: #c0c0c0 !important;
+      }
+      .rank-bronze {
+        color: #cd7f32 !important;
+      }
+      .team-name {
+        font-weight: 600;
+        color: #fff !important;
+      }
+      .method-name {
+        font-size: 0.85rem;
+        color: var(--drivex-text-soft) !important;
+      }
+
+      /* --- CONTRIBUTORS --- */
+      .contributor-card {
+        background: rgba(2, 8, 23, 0.4);
+        border-radius: var(--drivex-radius-xl);
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        border: 1px solid rgba(45, 212, 191, 0.1);
+        height: 100%;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+      }
+      .contributor-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--drivex-primary);
+      }
+      .contributor-card img {
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        min-width: 80px;
+        object-fit: cover;
+        border: 2px solid var(--drivex-primary);
+        margin-right: 1.5rem;
+      }
+      .contributor-info {
+        text-align: left;
+      }
+      .contributor-info b {
+        color: #fff;
+        font-size: 1rem;
+      }
+      .contributor-info p {
+        margin: 0 !important;
+        font-size: 0.85rem !important;
+        color: var(--drivex-text-soft);
+      }
+
+      @media screen and (max-width: 768px) {
+        .goals-container {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar is-fixed-top" role="navigation">
+      <div class="container is-fluid px-6">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="#top">
+            <strong class="is-size-4" style="color: #fff; letter-spacing: 1px"
+              >MDrive</strong
+            >
+          </a>
+          <a role="button" class="navbar-burger" data-target="navbarMenu">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+
+        <div id="navbarMenu" class="navbar-menu">
+          <div class="navbar-end">
+            <a
+              class="navbar-item nav-link"
+              href="https://mobility-lab.seas.ucla.edu/"
+              target="_blank"
+              >Mobility Lab</a
+            >
+            <a class="navbar-item nav-link" href="#challenge">Overview</a>
+            <a class="navbar-item nav-link" href="#leaderboard">Leaderboard</a>
+            <a class="navbar-item nav-link" href="#dataset">Dataset</a>
+            <a class="navbar-item nav-link" href="#submission">Submission</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <section id="top" class="hero drivex-hero">
+      <div class="hero-body">
+        <div class="container is-fluid px-6">
+          <div class="columns">
+            <div class="column is-12-tablet is-10-desktop">
+              <p class="hero-kicker">
+                Multi-Agent System + Closed-loop Evaluation
+              </p>
+              <p class="hero-presents">Mobility Lab presents</p>
+
+              <h1
+                class="title is-2 hero-title"
+                style="font-size: clamp(1.4rem, 3.5vw, 2.1rem)"
+              >
+                MDrive: A Cooperative Driving Benchmark for End-to-End
+                Closed-loop Multi-Agent System
+              </h1>
+
+              <p
+                class="subtitle is-6"
+                style="
+                  color: var(--drivex-text-soft) !important;
+                  max-width: 850px;
+                  line-height: 1.6;
+                "
+              >
+                A benchmark for multi-agent, multi-granular cooperative driving.
+                Focus on end-to-end closed-loop systems to improve safety and
+                coordination in complex urban environments.
+              </p>
+
+              <div class="hero-buttons">
+                <a href="#submission" class="button is-rounded btn-submit"
+                  >Submit Results</a
+                >
+                <a href="#leaderboard" class="button is-rounded btn-leaderboard"
+                  >View Leaderboard</a
+                >
+              </div>
+
+              <div class="hero-info-boxes">
+                <div class="info-box">
+                  <span class="box-label">Submission Deadline</span>
+                  <span class="box-date">March 1, 2026</span>
+                </div>
+                <div class="info-box">
+                  <span class="box-label">Workshop Date</span>
+                  <span class="box-date">June 22, 2026</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="body-container">
+      <section class="section" id="challenge">
+        <div class="content">
+          <h2 class="title">Overview</h2>
+          <p>
+            The <b>MDrive Cooperative Driving Challenge</b> evaluates whether
+            multi-agent coordination and V2X communication can significantly
+            improve autonomous driving safety and efficiency in high-stakes
+            urban scenarios. While traditional models rely on single-vehicle
+            onboard perception, MDrive introduces a closed-loop benchmark where
+            connected agents share sensory data to navigate complex
+            environments.
+          </p>
+
+          <div class="research-question">
+            "Can models that incorporate real-time V2X messages from
+            infrastructure and neighboring vehicles achieve higher driving
+            success rates than state-of-the-art single-agent methods?"
+          </div>
+
+          <p>
+            This challenge is built on <b>MDriveBench</b>, a multi-agent
+            extension of high-fidelity simulators. Scenarios include occluded
+            intersections, unprotected turns, and emergency yields, providing a
+            robust testbed for cooperative intelligence.
+          </p>
+
+          <h3 class="subtitle">Task Definition</h3>
+          <p>Given:</p>
+          <ul>
+            <li>
+              <b>Ego vehicle visual/LiDAR input</b> and historical trajectory
+              information (past 2 seconds).
+            </li>
+            <li>
+              <b>V2X Cooperative Messages</b> (shared feature maps or raw sensor
+              data) from nearby agents and Roadside Units (RSUs).
+            </li>
+            <li>
+              <b>High-definition map data</b> of the local urban environment.
+            </li>
+          </ul>
+          <p>
+            Participants must predict the ego vehicle’s
+            <b>future trajectory</b> and output
+            <b>driving control commands</b> over the next 6 seconds. The key
+            research question is whether models can effectively leverage shared
+            cooperative information to navigate situations where local
+            perception is occluded or insufficient.
+          </p>
+
+          <h3 class="subtitle">Evaluation Metrics</h3>
+          <p>
+            Submissions are evaluated using metrics tailored for closed-loop
+            safety and cooperative efficiency:
+          </p>
+          <ul>
+            <li>
+              <b>Driving Score (DS):</b> A weighted average of success rate
+              penalized by collisions and traffic rule violations.
+            </li>
+            <li>
+              <b>Success Rate (SR):</b> The percentage of trials where the agent
+              reaches the goal safely within the time limit.
+            </li>
+          </ul>
+
+          <h3 class="subtitle">Goals and Expected Outcomes</h3>
+          <p>The MDrive challenge aims to:</p>
+          <div class="goals-container">
+            <div class="goal-item">
+              <div class="goal-number">1</div>
+              <div class="goal-content">
+                <strong
+                  >Establish cooperative driving as a research priority</strong
+                >
+                <p>
+                  Demonstrate that V2X provides actionable information for
+                  safety-critical planning.
+                </p>
+              </div>
+            </div>
+            <div class="goal-item">
+              <div class="goal-number">2</div>
+              <div class="goal-content">
+                <strong>Benchmark multi-agent models</strong>
+                <p>
+                  Evaluate how current architectures ground shared heterogeneous
+                  data into driving behavior.
+                </p>
+              </div>
+            </div>
+            <div class="goal-item">
+              <div class="goal-number">3</div>
+              <div class="goal-content">
+                <strong>Quantify the V2X benefit</strong>
+                <p>
+                  Measure the gap between single-agent and cooperative systems
+                  to provide motivation for V2X deployment.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p style="margin-top: 2rem">
+            We hypothesize that cooperative models will show significant
+            improvements particularly in <b>occluded environments</b> and
+            <b>high-density traffic merges</b> where single-agent perception is
+            fundamentally limited.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="leaderboard">
+        <div class="content">
+          <h2 class="title">Leaderboard</h2>
+          <p>
+            Current rankings for the MDrive challenge. Results are updated
+            periodically as new submissions are validated.
+          </p>
+          <div class="leaderboard-table-container">
+            <table class="leaderboard-table">
+              <thead>
+                <tr>
+                  <th style="color: #ffffff !important">Rank</th>
+                  <th style="color: #ffffff !important">Team / Method</th>
+                  <th style="color: #ffffff !important">Driving Score (DS)</th>
+                  <th style="color: #ffffff !important">Success Rate (SR)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="rank-gold">1</td>
+                  <td>
+                    <span class="team-name">Team_Alpha</span><br />
+                    <span class="method-name">Method_Placeholder_A</span>
+                  </td>
+                  <td><strong>0.000</strong></td>
+                  <td>0.0%</td>
+                </tr>
+                <tr>
+                  <td class="rank-silver">2</td>
+                  <td>
+                    <span class="team-name">Team_Beta</span><br />
+                    <span class="method-name">Method_Placeholder_B</span>
+                  </td>
+                  <td><strong>0.000</strong></td>
+                  <td>0.0%</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>
+                    <span class="team-name">Team_Delta</span><br />
+                    <span class="method-name">Method_Placeholder_D</span>
+                  </td>
+                  <td><strong>0.000</strong></td>
+                  <td>0.0%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="dataset">
+        <div class="content">
+          <h2 class="title">The MDrive Dataset</h2>
+          <p>
+            Our benchmark is powered by the MDrive dataset, featuring
+            comprehensive multi-agent sensor data:
+          </p>
+          <ul>
+            <li>
+              <b>Heterogeneous Agents</b>: Synchronized data from vehicles and
+              infrastructure sensors.
+            </li>
+            <li>
+              <b>Complex Scenarios</b>: 100+ unique urban layouts including
+              signalized intersections.
+            </li>
+            <li>
+              <b>Reactive Evaluation</b>: Integration with OpenCDA for
+              evaluating perception's impact on driving.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="submission">
+        <div class="content">
+          <h2 class="title">Challenge Submission Instructions</h2>
+          <p>
+            Ready to submit? Use the official submission platform to upload your
+            results.
+          </p>
+
+          <div class="has-text-left" style="margin: 2rem 0">
+            <a
+              href="https://huggingface.co/spaces/jiaqima2025/MDriveBench"
+              target="_blank"
+              class="button is-large is-rounded btn-submit"
+              style="padding: 0 2.5rem"
+            >
+              <span class="icon"><i class="fas fa-upload"></i></span>
+              <span>Submit Here</span>
+            </a>
+          </div>
+
+          <h3 class="subtitle">Submission Checklist</h3>
+          <ul>
+            <li><b>Single .zip file</b> containing your model and code.</li>
+            <li><b>Required ZIP file structure</b> as defined below.</li>
+          </ul>
+
+          <h3 class="subtitle">Required ZIP File Structure</h3>
+          <p>Your ZIP file must be organized as follows:</p>
+          <div
+            class="formula-box"
+            style="
+              text-align: left;
+              font-family: 'Courier New', monospace;
+              font-size: 0.9rem;
+            "
+          >
+            team_name.zip<br />
+            ├── agents.py
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Main
+            agent class (must inherit from BaseAgent)<br />
+            ├── config/
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+            Folder containing all .yaml or .py configs<br />
+            ├── src/
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+            Folder containing model architecture & utilities<br />
+            ├── weights/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+            Folder containing all trained checkpoints (.pth/.ckpt)<br />
+            └── model_env.yaml &nbsp;&nbsp;&nbsp;&nbsp;# Conda environment
+            specification
+          </div>
+
+          <h3 class="subtitle">Environment Specification</h3>
+          <p>
+            MDriveBench supports two methods of environment provisioning. To
+            ensure 100% reproducibility, we strongly recommend providing a
+            <b>Dockerfile</b>.
+          </p>
+          <ul>
+            <li>
+              <b>Docker (Primary):</b> Your Dockerfile should be based on a
+              stable CUDA image (e.g.,
+              <code style="color: var(--drivex-accent)"
+                >nvidia/cuda:11.3.1-devel-ubuntu20.04</code
+              >). It must install all necessary libraries so that the agent can
+              run immediately upon container launch.
+            </li>
+            <li>
+              <b>Conda (Fallback):</b> If no Dockerfile is provided, we will
+              build a dedicated environment using your
+              <code style="color: var(--drivex-accent)">model_env.yaml</code>.
+              <br /><b>Note:</b> Your code must be compatible with Python 3.7 to
+              interface with the CARLA 0.9.12.1 API. Do not include CARLA in
+              your environment files; the evaluation server will automatically
+              link the standardized CARLA build.
+            </li>
+          </ul>
+
+          <p style="margin-top: 2rem">
+            For further details, please refer to the
+            <a
+              href="https://github.com/ucla-mobility/MDriveBench"
+              target="_blank"
+              style="color: var(--drivex-primary)"
+              >Official Documentation</a
+            >.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="organizers">
+        <div class="content">
+          <h2 class="title">Contributors</h2>
+          <div class="columns is-multiline">
+            <div class="column is-6">
+              <div class="contributor-card">
+                <img src="static/img/jiaqi_ma.jpg" alt="Prof. Jiaqi Ma" />
+                <div class="contributor-info">
+                  <b>Prof. Jiaqi Ma</b>
+                  <p>Director, UCLA Mobility Lab</p>
+                </div>
+              </div>
+            </div>
+            <div class="column is-6">
+              <div class="contributor-card">
+                <img src="https://via.placeholder.com/150" alt="Placeholder" />
+                <div class="contributor-info">
+                  <b>Contributor Name</b>
+                  <p>Institution / Role</p>
+                </div>
+              </div>
+            </div>
+            <div class="column is-6">
+              <div class="contributor-card">
+                <img src="https://via.placeholder.com/150" alt="Placeholder" />
+                <div class="contributor-info">
+                  <b>Contributor Name</b>
+                  <p>Institution / Role</p>
+                </div>
+              </div>
+            </div>
+            <div class="column is-6">
+              <div class="contributor-card">
+                <img src="https://via.placeholder.com/150" alt="Placeholder" />
+                <div class="contributor-info">
+                  <b>Contributor Name</b>
+                  <p>Institution / Role</p>
+                </div>
+              </div>
+            </div>
+            <div class="column is-6">
+              <div class="contributor-card">
+                <img src="https://via.placeholder.com/150" alt="Placeholder" />
+                <div class="contributor-info">
+                  <b>Contributor Name</b>
+                  <p>Institution / Role</p>
+                </div>
+              </div>
+            </div>
+            <div class="column is-6">
+              <div class="contributor-card">
+                <img src="https://via.placeholder.com/150" alt="Placeholder" />
+                <div class="contributor-info">
+                  <b>Contributor Name</b>
+                  <p>Institution / Role</p>
+                </div>
+              </div>
+            </div>
+            <div class="column is-6">
+              <div class="contributor-card">
+                <img src="https://via.placeholder.com/150" alt="Placeholder" />
+                <div class="contributor-info">
+                  <b>Contributor Name</b>
+                  <p>Institution / Role</p>
+                </div>
+              </div>
+            </div>
+            <div class="column is-6">
+              <div class="contributor-card">
+                <img src="https://via.placeholder.com/150" alt="Placeholder" />
+                <div class="contributor-info">
+                  <b>Contributor Name</b>
+                  <p>Institution / Role</p>
+                </div>
+              </div>
+            </div>
+            <div class="column is-6">
+              <div class="contributor-card">
+                <img src="https://via.placeholder.com/150" alt="Placeholder" />
+                <div class="contributor-info">
+                  <b>Contributor Name</b>
+                  <p>Institution / Role</p>
+                </div>
+              </div>
+            </div>
+            <div class="column is-6">
+              <div class="contributor-card">
+                <img src="https://via.placeholder.com/150" alt="Placeholder" />
+                <div class="contributor-info">
+                  <b>Contributor Name</b>
+                  <p>Institution / Role</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer
+      class="footer"
+      style="
+        background: #020617;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      "
+    >
+      <div class="content has-text-centered">
+        <p style="color: var(--drivex-text-soft)">
+          © 2026 UCLA Mobility Lab. MDrive is an open research project.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const $navbarBurgers = Array.prototype.slice.call(
+          document.querySelectorAll(".navbar-burger"),
+          0
+        );
+        if ($navbarBurgers.length > 0) {
+          $navbarBurgers.forEach((el) => {
+            el.addEventListener("click", () => {
+              const target = el.dataset.target || "navbarMenu";
+              const $target = document.getElementById(target);
+              el.classList.toggle("is-active");
+              $target.classList.toggle("is-active");
+            });
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
