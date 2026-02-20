@@ -30,7 +30,7 @@
         --drivex-bg-soft: #0b1224;
         --drivex-primary: #2dd4bf;
         --drivex-primary-soft: rgba(45, 212, 191, 0.12);
-        --drivex-accent: #38bdf8;
+        --drivex-accent: #3872f8;
         --drivex-text-main: #e5e7eb;
         --drivex-text-soft: #9ca3af;
         --drivex-radius-xl: 18px;
@@ -559,30 +559,6 @@
             robust testbed for cooperative intelligence.
           </p>
 
-          <h3 class="subtitle">Task Definition</h3>
-          <p>Given:</p>
-          <ul>
-            <li>
-              <b>Ego vehicle visual/LiDAR input</b> and historical trajectory
-              information (past 2 seconds).
-            </li>
-            <li>
-              <b>V2X Cooperative Messages</b> (shared feature maps or raw sensor
-              data) from nearby agents and Roadside Units (RSUs).
-            </li>
-            <li>
-              <b>High-definition map data</b> of the local urban environment.
-            </li>
-          </ul>
-          <p>
-            Participants must predict the ego vehicle’s
-            <b>future trajectory</b> and output
-            <b>driving control commands</b> over the next 6 seconds. The key
-            research question is whether models can effectively leverage shared
-            cooperative information to navigate situations where local
-            perception is occluded or insufficient.
-          </p>
-
           <h3 class="subtitle">Evaluation Metrics</h3>
           <p>
             Submissions are evaluated using metrics tailored for closed-loop
@@ -599,38 +575,70 @@
             </li>
           </ul>
 
-          <h3 class="subtitle">Goals and Expected Outcomes</h3>
-          <p>The MDrive challenge aims to:</p>
+          <h3 class="subtitle">Challenge task</h3>
+          <p>Participants should design models that:</p>
+          <div class="goals-container">
+            <div class="goal-item">
+              <div class="goal-number"><i class="fas fa-brain"></i></div>
+              <div class="goal-content">
+                <strong>Multi-Agent Reasoning</strong>
+                <p>
+                  Reason over multiple agents and shared observations to build a
+                  comprehensive environmental understanding.
+                </p>
+              </div>
+            </div>
+            <div class="goal-item">
+              <div class="goal-number"><i class="fas fa-comments"></i></div>
+              <div class="goal-content">
+                <strong>Communication & Coordination</strong>
+                <p>
+                  Leverage inter-agent communication or implicit coordination to
+                  synchronize movements safely.
+                </p>
+              </div>
+            </div>
+            <div class="goal-item">
+              <div class="goal-number"><i class="fas fa-route"></i></div>
+              <div class="goal-content">
+                <strong>Joint Driving Policies</strong>
+                <p>
+                  Output joint driving policies in dynamic traffic scenes to
+                  optimize global flow and safety.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="subtitle">Challenge Objectives</h3>
           <div class="goals-container">
             <div class="goal-item">
               <div class="goal-number">1</div>
               <div class="goal-content">
-                <strong
-                  >Establish cooperative driving as a research priority</strong
-                >
+                <strong>Closed-loop Multi-Agent Driving</strong>
                 <p>
-                  Demonstrate that V2X provides actionable information for
-                  safety-critical planning.
+                  Develop policies that control multiple vehicles simultaneously
+                  in realistic urban scenarios.
                 </p>
               </div>
             </div>
             <div class="goal-item">
               <div class="goal-number">2</div>
               <div class="goal-content">
-                <strong>Benchmark multi-agent models</strong>
+                <strong>Collaborative Scene Understanding</strong>
                 <p>
-                  Evaluate how current architectures ground shared heterogeneous
-                  data into driving behavior.
+                  Enable agents to exchange or infer complementary information
+                  to improve perception and decision-making.
                 </p>
               </div>
             </div>
             <div class="goal-item">
               <div class="goal-number">3</div>
               <div class="goal-content">
-                <strong>Quantify the V2X benefit</strong>
+                <strong>End-to-End Reasoning</strong>
                 <p>
-                  Measure the gap between single-agent and cooperative systems
-                  to provide motivation for V2X deployment.
+                  Learn mappings from raw sensory inputs (and optional messages)
+                  directly to driving actions.
                 </p>
               </div>
             </div>
@@ -693,30 +701,6 @@
               </tbody>
             </table>
           </div>
-        </div>
-      </section>
-
-      <section class="section" id="dataset">
-        <div class="content">
-          <h2 class="title">The MDrive Dataset</h2>
-          <p>
-            Our benchmark is powered by the MDrive dataset, featuring
-            comprehensive multi-agent sensor data:
-          </p>
-          <ul>
-            <li>
-              <b>Heterogeneous Agents</b>: Synchronized data from vehicles and
-              infrastructure sensors.
-            </li>
-            <li>
-              <b>Complex Scenarios</b>: 100+ unique urban layouts including
-              signalized intersections.
-            </li>
-            <li>
-              <b>Reactive Evaluation</b>: Integration with OpenCDA for
-              evaluating perception's impact on driving.
-            </li>
-          </ul>
         </div>
       </section>
 
@@ -926,7 +910,7 @@
 
             <div class="column is-6">
               <div class="contributor-card">
-                <img src="https://via.placeholder.com/150" alt="Henry Wei" />
+                <img src="static/img/henry.jpg" alt="Henry Wei" />
                 <div class="contributor-info">
                   <b>Henry Wei</b>
                   <p>UCLA</p>
