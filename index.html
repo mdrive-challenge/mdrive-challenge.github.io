@@ -202,28 +202,9 @@
         background-color: #38e2cf !important;
       }
 
-      .btn-leaderboard {
-        background-color: transparent !important;
-        color: var(--drivex-primary) !important;
-        border: 2px solid var(--drivex-primary) !important;
-        font-weight: 600;
-        padding-left: 1.5rem !important;
-        padding-right: 1.5rem !important;
-        height: 2.8rem !important;
-        font-size: 0.9rem !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      }
-
-      .btn-leaderboard:hover {
-        transform: translateY(-2px);
-        background-color: var(--drivex-primary) !important;
-        color: var(--drivex-bg) !important;
-        box-shadow: 0 8px 15px rgba(45, 212, 191, 0.2);
-      }
-
       /* --- BODY CONTAINER & CONTENT SEPARATION --- */
       .body-container {
-        max-width: 1100px;
+        max-width: 1250px;
         margin: 40px auto;
         background-color: var(--drivex-bg-soft);
         border: 1px solid rgba(255, 255, 255, 0.08);
@@ -342,58 +323,100 @@
         font-size: 1.1rem;
       }
 
-      /* --- LEADERBOARD & TABLE VISIBILITY --- */
-      .leaderboard-table-container {
-        overflow-x: auto;
-        margin-top: 1.5rem;
+      /* --- TIMELINE STYLING --- */
+      .timeline-wrapper {
+        padding: 3rem 0;
+        position: relative;
       }
-      .leaderboard-table {
-        width: 100%;
-        background-color: transparent;
-        color: var(--drivex-text-main);
-        border-collapse: separate;
-        border-spacing: 0 8px;
+
+      .timeline-line {
+        position: absolute;
+        top: 50%;
+        left: 5%;
+        right: 5%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--drivex-primary),
+          var(--drivex-accent)
+        );
+        box-shadow: 0 0 15px var(--drivex-primary-glow);
+        z-index: 1;
       }
-      .leaderboard-table th {
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 1px;
-        padding: 1rem;
-        border: none !important;
+
+      .timeline-container {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        z-index: 2;
       }
-      .leaderboard-table td {
-        background-color: rgba(255, 255, 255, 0.03);
-        padding: 1rem;
-        vertical-align: middle;
-        border: none !important;
-        font-size: 0.95rem;
-        color: #ffffff !important;
-      }
-      .leaderboard-table tr td:first-child {
-        border-radius: 8px 0 0 8px;
-        font-weight: 800;
+
+      .timeline-node {
         text-align: center;
-        width: 60px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
-      .leaderboard-table tr td:last-child {
-        border-radius: 0 8px 8px 0;
+
+      .node-dot {
+        width: 20px;
+        height: 20px;
+        background: var(--drivex-bg);
+        border: 3px solid var(--drivex-primary);
+        border-radius: 50%;
+        margin: 15px 0;
+        box-shadow: 0 0 10px var(--drivex-primary);
+        transition: transform 0.3s ease;
       }
-      .rank-gold {
-        color: #ffd700 !important;
+
+      .timeline-node:hover .node-dot {
+        transform: scale(1.3);
+        background: var(--drivex-primary);
       }
-      .rank-silver {
-        color: #c0c0c0 !important;
+
+      .node-date {
+        font-family: monospace;
+        color: var(--drivex-primary);
+        font-weight: 700;
+        font-size: 1.1rem;
       }
-      .rank-bronze {
-        color: #cd7f32 !important;
+
+      .node-desc {
+        font-size: 1rem;
+        color: var(--drivex-text-soft);
+        max-width: 200px;
+        margin-top: 10px;
       }
-      .team-name {
-        font-weight: 600;
-        color: #fff !important;
-      }
-      .method-name {
-        font-size: 0.85rem;
-        color: var(--drivex-text-soft) !important;
+
+      /* Mobile Responsiveness for Timeline */
+      @media screen and (max-width: 768px) {
+        .timeline-line {
+          display: none;
+        }
+        .timeline-container {
+          flex-direction: column;
+          gap: 2rem;
+          align-items: flex-start;
+          padding-left: 2rem;
+          border-left: 2px solid var(--drivex-primary);
+        }
+        .timeline-node {
+          align-items: flex-start;
+          text-align: left;
+        }
+        .node-dot {
+          width: 20px;
+          height: 20px;
+          background: var(--drivex-bg);
+          border: 3px solid var(--drivex-primary);
+          border-radius: 50%;
+          margin: 100px 0;
+          box-shadow: 0 0 10px var(--drivex-primary);
+          transition: transform 0.3s ease;
+          position: relative;
+          z-index: 3;
+        }
       }
 
       /* --- CONTRIBUTORS --- */
@@ -468,7 +491,6 @@
               >Mobility Lab</a
             >
             <a class="navbar-item nav-link" href="#challenge">Overview</a>
-            <a class="navbar-item nav-link" href="#leaderboard">Leaderboard</a>
             <a class="navbar-item nav-link" href="#submission">Submission</a>
           </div>
         </div>
@@ -510,12 +532,19 @@
                 <a href="#submission" class="button is-rounded btn-submit"
                   >Submit Results</a
                 >
-                <a href="#leaderboard" class="button is-rounded btn-leaderboard"
+                <a
+                  href="https://huggingface.co/spaces/jiaqima2025/MDriveBench"
+                  target="_blank"
+                  class="button is-rounded btn-leaderboard"
                   >View Leaderboard</a
                 >
               </div>
 
               <div class="hero-info-boxes">
+                <div class="info-box">
+                  <span class="box-label">Submissions Open</span>
+                  <span class="box-date">March 2, 2026</span>
+                </div>
                 <div class="info-box">
                   <span class="box-label">Submission Deadline</span>
                   <span class="box-date">May 1, 2026</span>
@@ -532,6 +561,44 @@
     </section>
 
     <div class="body-container">
+      <section class="section" id="video-showcase" style="padding: 2rem 0">
+        <div class="container is-fluid px-6">
+          <div
+            class="video-container"
+            style="
+              position: relative;
+              background: var(--drivex-bg-soft);
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              border-radius: var(--drivex-radius-xl);
+              box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+              overflow: hidden;
+              backdrop-filter: blur(12px);
+              max-width: 1100px;
+              margin: 0 auto;
+            "
+          >
+            <div
+              class="is-video-wrapper"
+              style="position: relative; padding-bottom: 56.25%; height: 0"
+            >
+              <iframe
+                src="https://www.youtube.com/embed/5P6qJkp1Ap0?autoplay=1&mute=1&loop=1&playlist=5P6qJkp1Ap0"
+                style="
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                  border: none;
+                "
+                allow="autoplay; encrypted-media"
+                allowfullscreen
+              >
+              </iframe>
+            </div>
+          </div>
+        </div>
+      </section>
       <section class="section" id="challenge">
         <div class="content">
           <h2 class="title">Overview</h2>
@@ -652,53 +719,36 @@
         </div>
       </section>
 
-      <section class="section" id="leaderboard">
+      <section class="section" id="timeline">
         <div class="content">
-          <h2 class="title">Leaderboard</h2>
-          <p>
-            Current rankings for the MDrive challenge. Results are updated
-            periodically as new submissions are validated.
-          </p>
-          <div class="leaderboard-table-container">
-            <table class="leaderboard-table">
-              <thead>
-                <tr>
-                  <th style="color: #ffffff !important">Rank</th>
-                  <th style="color: #ffffff !important">Team / Method</th>
-                  <th style="color: #ffffff !important">Driving Score (DS)</th>
-                  <th style="color: #ffffff !important">Success Rate (SR)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="rank-gold">1</td>
-                  <td>
-                    <span class="team-name">Team_Alpha</span><br />
-                    <span class="method-name">Method_Placeholder_A</span>
-                  </td>
-                  <td><strong>0.000</strong></td>
-                  <td>0.0%</td>
-                </tr>
-                <tr>
-                  <td class="rank-silver">2</td>
-                  <td>
-                    <span class="team-name">Team_Beta</span><br />
-                    <span class="method-name">Method_Placeholder_B</span>
-                  </td>
-                  <td><strong>0.000</strong></td>
-                  <td>0.0%</td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                  <td>
-                    <span class="team-name">Team_Delta</span><br />
-                    <span class="method-name">Method_Placeholder_D</span>
-                  </td>
-                  <td><strong>0.000</strong></td>
-                  <td>0.0%</td>
-                </tr>
-              </tbody>
-            </table>
+          <h2 class="title">Challenge Roadmap</h2>
+          <div class="timeline-wrapper">
+            <div class="timeline-line"></div>
+            <div class="timeline-container">
+              <div class="timeline-node">
+                <span class="node-date">FEB 20</span>
+                <div class="node-dot"></div>
+                <span class="node-desc"
+                  >Challenge announcement & Warmup leaderboard opens</span
+                >
+              </div>
+
+              <div class="timeline-node">
+                <span class="node-date">MAR 02</span>
+                <div class="node-dot"></div>
+                <span class="node-desc"
+                  >Official Challenge Launch with Open-Loop metrics</span
+                >
+              </div>
+
+              <div class="timeline-node">
+                <span class="node-date">MAY 01</span>
+                <div class="node-dot"></div>
+                <span class="node-desc"
+                  >Challenge End & Final Submission Deadline</span
+                >
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -775,9 +825,9 @@
               build a dedicated environment using your
               <code style="color: var(--drivex-accent)">model_env.yaml</code>.
               <br /><b>Note:</b> Your code must be compatible with Python 3.7 to
-              interface with the CARLA 0.9.12.1 API. Do not include CARLA in
-              your environment files; the evaluation server will automatically
-              link the standardized CARLA build.
+              interface with the CARLA 0.9.12 API. Do not include CARLA in your
+              environment files; the evaluation server will automatically link
+              the standardized CARLA build.
             </li>
           </ul>
 
