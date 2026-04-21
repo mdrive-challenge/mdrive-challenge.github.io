@@ -65,12 +65,40 @@
         position: relative;
         font-weight: 500;
         color: rgba(200, 220, 255, 0.85) !important;
-        transition: color 0.3s ease;
         padding: 0.5rem 1rem;
+        border-radius: 8px;
+        transition:
+          color 0.25s ease,
+          background-color 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+
+      /* Animated underline bar */
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 2px;
+        left: 50%;
+        transform: translateX(-50%) scaleX(0);
+        width: 70%;
+        height: 2px;
+        background: linear-gradient(90deg, #7ec8f0, #0077e6);
+        border-radius: 999px;
+        transition:
+          transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          opacity 0.3s ease;
+        opacity: 0;
       }
 
       .nav-link:hover {
         color: #ffffff !important;
+        background-color: rgba(100, 170, 255, 0.15) !important;
+        box-shadow: 0 0 12px rgba(0, 119, 230, 0.25);
+      }
+
+      .nav-link:hover::after {
+        transform: translateX(-50%) scaleX(1);
+        opacity: 1;
       }
 
       /* --- FIX FOR MOBILE NAVBAR DROPDOWN --- */
@@ -86,14 +114,15 @@
           color: var(--drivex-text-main) !important;
           padding: 1.25rem 1.5rem;
           border-bottom: 1px solid rgba(0, 86, 177, 0.08);
+          border-radius: 0;
         }
 
         .navbar-item.nav-link:hover {
-          background-color: rgba(0, 86, 177, 0.1) !important;
+          background-color: rgba(0, 86, 177, 0.12) !important;
           color: var(--drivex-primary) !important;
+          box-shadow: none;
         }
 
-        /* Remove the hover underline animation on mobile as it usually looks broken in vertical lists */
         .nav-link::after {
           display: none;
         }
@@ -491,6 +520,7 @@
             >
             <a class="navbar-item nav-link" href="#challenge">Overview</a>
             <a class="navbar-item nav-link" href="#submission">Submission</a>
+            <a class="navbar-item nav-link" href="paper.html">Paper</a>
           </div>
         </div>
       </div>
@@ -546,7 +576,7 @@
                 </div>
                 <div class="info-box">
                   <span class="box-label">Submission Deadline</span>
-                  <span class="box-date">May 1, 2026</span>
+                  <span class="box-date">May 24, 2026</span>
                 </div>
                 <div class="info-box">
                   <span class="box-label">Workshop Date</span>
@@ -741,7 +771,7 @@
               </div>
 
               <div class="timeline-node">
-                <span class="node-date">MAY 01</span>
+                <span class="node-date">MAY 24</span>
                 <div class="node-dot"></div>
                 <span class="node-desc"
                   >Challenge End & Final Submission Deadline</span
